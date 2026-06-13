@@ -1,6 +1,5 @@
 # Force out of source build
 %global __cmake_in_source_build 0
-%global __cmake_generator Unix\ Makefiles
 
 #This spec file is intended for daily development snapshot release
 %global build_shortcommit {{{ git rev-parse --short HEAD }}}
@@ -75,6 +74,7 @@ sed -i -e 's/xournalpp-wrapper/xournalpp/' desktop/com.github.xournalpp.xournalp
 
 %build
 %cmake \
+        -G "Unix Makefiles" \
         -DDISTRO_CODENAME="Fedora Linux" \
         -DENABLE_CPPTRACE=OFF \
         %{?_gtest: -DENABLE_GTEST=ON} \
