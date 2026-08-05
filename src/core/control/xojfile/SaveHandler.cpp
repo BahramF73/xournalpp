@@ -17,7 +17,7 @@
 #include "control/xml/XmlTextNode.h"           // for XmlTextNode
 #include "control/xojfile/XmlAttrs.h"          // for xml_attrs
 #include "control/xojfile/XmlTags.h"           // for xml_tags
-#include "control/xojfile/XmlTags.h"           // for XmlTags
+#include "control/xojfile/XmlValues.h"         // for xml_values
 #include "model/AudioElement.h"                // for AudioElement
 #include "model/BackgroundImage.h"             // for BackgroundImage
 #include "model/Document.h"                    // for Document
@@ -198,6 +198,12 @@ void SaveHandler::visitLayer(XmlNode* page, const Layer* l) {
             if (auto w = t->getWrap(); w != Text::NO_WRAP) {
                 text->setAttrib(xoj::xml_attrs::WRAP_STR, w);
             }
+            if (auto al = t->getAlign(); al != TextAlignment::LEFT) {
+                text->setAttrib(xoj::xml_attrs::ALIGN_STR, TextAlignment::NAMES[al]);
+            }
+            if (t->getJustify()) {
+                text->setAttrib(xoj::xml_attrs::JUSTIFY_STR, xoj::xml_values::TRUE_STR);
+            }
 
             writeTimestamp(text, t);
         } else if (e->getType() == ELEMENT_IMAGE) {
@@ -230,7 +236,7 @@ void SaveHandler::visitLayer(XmlNode* page, const Layer* l) {
 
             const XojFont& f = l->getFont();
 
-            link->setAttrib(xoj::xml_attrs::ALIGN_STR, l->getAlignment());
+            link->setAttrib(xoj::xml_attrs::ALIGN_STR, TextAlignment::NAMES[l->getAlignment()]);
             link->setAttrib(xoj::xml_attrs::FONT_STR, f.getName().c_str());
             link->setAttrib(xoj::xml_attrs::SIZE_STR, f.getSize());
             const auto& origin = l->getOrigin();
